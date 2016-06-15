@@ -26,9 +26,9 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.MyViewHo
         public MyViewHolder(View view) {
             super(view);
 
-            date = (TextView) view.findViewById(R.id.date1);
-//            day = (TextView) view.findViewById(R.id.day);
-//            temperature = (TextView) view.findViewById(R.id.temperature);
+            date = (TextView) view.findViewById(R.id.date);
+            day = (TextView) view.findViewById(R.id.day);
+            temperature = (TextView) view.findViewById(R.id.temperature);
         }
     }
 
@@ -49,8 +49,15 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Weather weather = weatherList.get(position);
         holder.date.setText(weather.getDate());
-//        holder.day.setText("y");
-//        holder.temperature.setText("z");
+        holder.day.setText(weather.getDay());
+        holder.temperature.setText(weather.getTemperature());
+        if (position==0){
+
+        }else {
+
+
+        }
+
 
     }
 

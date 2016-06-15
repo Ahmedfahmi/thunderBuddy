@@ -81,10 +81,10 @@ public class LoadingTask extends AsyncTask<String, Void, String> {
                     .getJSONObject("simpleforecast");
             JSONArray forecastArray = simpleForecast
                     .getJSONArray("forecastday");
-            for (int i = 0; i <3; i++) {
+            for (int i = 0; i <4; i++) {
                 JSONObject fa = forecastArray.getJSONObject(i);
                 JSONObject highArray = fa.getJSONObject("high");
-                for (int h = 0; h < highArray.length(); h++) {
+                for (int h = 0; h < 3; h++) {
                     celsius = highArray.getString("celsius");
                     Log.i("E_", celsius);
                     tempData.add(celsius);
@@ -92,7 +92,7 @@ public class LoadingTask extends AsyncTask<String, Void, String> {
 
                 }
                 JSONObject dateArray = fa.getJSONObject("date");
-                for (int h = 0; h < dateArray.length(); h++) {
+                for (int h = 0; h < 1; h++) {
                     String weekday = dateArray.getString("weekday");
                     String day = dateArray.getString("day");
                     String month = dateArray.getString("month");
@@ -104,7 +104,7 @@ public class LoadingTask extends AsyncTask<String, Void, String> {
                     String fullDate = day +" "+ year +" "+ month;
                     dateData.add(fullDate);
                     dayData.add(weekday);
-                    weatherData.add(new Weather(day,celsius,fullDate));
+                    weatherData.add(new Weather(weekday,celsius,fullDate));
 
 
                 }
