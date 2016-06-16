@@ -1,4 +1,4 @@
-package com.ahmedfahmi.challenge;
+package com.ahmedfahmi.challenge.ui;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -7,15 +7,16 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.ahmedfahmi.challenge.Assets.DataCenter;
-import com.ahmedfahmi.challenge.Assets.LoadingTask;
-import com.ahmedfahmi.challenge.Assets.Weather;
+import com.ahmedfahmi.challenge.managers.DataManager;
+import com.ahmedfahmi.challenge.managers.LoadingTask;
+import com.ahmedfahmi.challenge.model.Weather;
+import com.ahmedfahmi.challenge.R;
 
 import java.util.ArrayList;
 
 public class SplashActivity extends AppCompatActivity implements LoadingTask.LoadingTaskFinishedListener {
     private LoadingTask loadingTask;
-    private DataCenter dataCenter;
+    private DataManager dataManager;
     private ArrayList<Weather> weatherList;
 
     private boolean splashScreenIsActive = false;
@@ -36,7 +37,7 @@ public class SplashActivity extends AppCompatActivity implements LoadingTask.Loa
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.splashRelativeLayout);
         splashScreenIsActive = true;
         animateSun(splashIcon, relativeLayout);
-        dataCenter = DataCenter.instance(getApplicationContext());
+        dataManager = DataManager.instance(getApplicationContext());
         weatherList = new ArrayList<>();
         loadingTask = LoadingTask.instance(getApplicationContext(), this);
     }
@@ -64,7 +65,7 @@ public class SplashActivity extends AppCompatActivity implements LoadingTask.Loa
                 if (splashScreenIsActive) {
                     splashIcon.setTranslationX(middle);
                     splashIcon.animate().translationXBy(1000f).setDuration(2000);
-                    handler.postDelayed(this, 2000);//run after 2 second
+                    handler.postDelayed(this, 1500);//run after 2 second
                 }
             }
         };

@@ -1,16 +1,20 @@
-package com.ahmedfahmi.challenge.Assets;
+package com.ahmedfahmi.challenge.managers;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.widget.Toast;
 
+import com.ahmedfahmi.challenge.model.Weather;
+
+import java.io.File;
 import java.util.ArrayList;
 
 /**
  * Created by Ahmed Fahmi on 6/15/2016.
  */
-public class DataCenter {
+public class DataManager {
 
 
     private Context context;
@@ -26,9 +30,14 @@ public class DataCenter {
     private final String TEMPERATURE_COLUMN = "temp";
     private final String WEEKDAY_COLUMN = "weekday";
 
-    public static DataCenter dataCenter;
+    public static DataManager dataManager;
+    private boolean successful = false;
 
-    private DataCenter(Context context) {
+    public boolean isSuccessful() {
+        return successful;
+    }
+
+    private DataManager(Context context) {
 
         this.context = context;
         weatherDB = context.openOrCreateDatabase(DATABASE_NAME, context.MODE_PRIVATE, null);
@@ -37,22 +46,23 @@ public class DataCenter {
 
     }
 
-    private DataCenter() {
+    private DataManager() {
 
     }
 
-    public static DataCenter instance(Context context) {
-        if (dataCenter == null) {
-            dataCenter = new DataCenter(context);
+    public static DataManager instance(Context context) {
+
+        if (dataManager == null) {
+            dataManager = new DataManager(context);
         }
 
-        return dataCenter;
+        return dataManager;
     }
 
-    public static DataCenter instance() {
+    public static DataManager instance() {
 
 
-        return dataCenter;
+        return dataManager;
     }
 
 
@@ -62,10 +72,11 @@ public class DataCenter {
 
     public ArrayList<Weather> getWeatherList() {
         callOfflineBackup();
+
         return weatherList;
     }
 
-    public void updateDataCenter(String weekday, String temperature, String date) {
+    protected void updateDataCenter(String weekday, String temperature, String date) {
 
         SQLiteStatement statement = weatherDB.compileStatement(SQL_STATEMENT);
         statement.bindString(1, weekday);
@@ -75,29 +86,34 @@ public class DataCenter {
 
     }
 
-    public void cleanDataCenter() {
+    protected void cleanDataCenter() {
         weatherDB.execSQL(DELETE_QUERY);
     }
 
     /**
      * extract weather data from DataBase
      */
-    public void callOfflineBackup() {
+    private void callOfflineBackup() {
         Cursor c = weatherDB.rawQuery(SELECT_ALL_QUERY, null);
         int dateId = c.getColumnIndex(DATE_COLUMN);
         int weekdayId = c.getColumnIndex(WEEKDAY_COLUMN);
         int temperatureId = c.getColumnIndex(TEMPERATURE_COLUMN);
-        c.moveToFirst();
-        for (int i = 0; i < 4; i++) {
+        int size = c.getCount();
+        if (size > 0) {
+            successful = true;
+            c.moveToFirst();
+            for (int i = 0; i < 4; i++) {
 
-            String date = c.getString(dateId);
-            String temperature = c.getString(temperatureId);
-            String weekday = c.getString(weekdayId);
+                String date = c.getString(dateId);
+                String temperature = c.getString(temperatureId);
+                String weekday = c.getString(weekdayId);
 
-            weatherList.add(new Weather(weekday, temperature, date));
+                weatherList.add(new Weather(weekday, temperature, date));
 
-            c.moveToNext();
+                c.moveToNext();
+            }
         }
+
     }
 
 

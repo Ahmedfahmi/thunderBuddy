@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ahmedfahmi.challenge.Assets.Weather;
+import com.ahmedfahmi.challenge.model.Weather;
 import com.ahmedfahmi.challenge.R;
 
 import java.util.List;

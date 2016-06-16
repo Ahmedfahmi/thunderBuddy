@@ -1,19 +1,29 @@
-package com.ahmedfahmi.challenge.Assets;
+package com.ahmedfahmi.challenge.managers;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
 
+import android.content.DialogInterface;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+
+import com.ahmedfahmi.challenge.model.Weather;
+import com.ahmedfahmi.challenge.ui.MainActivity;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 
@@ -28,11 +38,13 @@ import okhttp3.Response;
 public class LoadingTask extends AsyncTask<String, Void, ArrayList<Weather>> {
     private final String API_URL = "http://api.wunderground.com/api/838ed9367e8876bf%20/forecast/q/EG/Cairo.json";
 
-    private Processor processor;
+    private ProcessingManager processingManager;
     private ArrayList<Weather> weatherList;
     private static LoadingTask loadingTask;
     private Context context;
-    private DataCenter dataCenter;
+    private DataManager dataManager;
+    private boolean isOfflineMode = false;
+
 
     public interface LoadingTaskFinishedListener {
         void onTaskFinished();
@@ -59,7 +71,7 @@ public class LoadingTask extends AsyncTask<String, Void, ArrayList<Weather>> {
     }
 
     private LoadingTask(Context context, LoadingTaskFinishedListener loadingTaskFinishedListener) {
-        processor = Processor.instance();
+        processingManager = ProcessingManager.instance();
         this.context = context;
         this.finishedListener = loadingTaskFinishedListener;
     }
@@ -69,70 +81,58 @@ public class LoadingTask extends AsyncTask<String, Void, ArrayList<Weather>> {
     }
 
 
-
-
     @Override
     protected ArrayList<Weather> doInBackground(String... urls) {
 
         weatherList = new ArrayList<>();
-        dataCenter = DataCenter.instance();
+        dataManager = DataManager.instance();
+
 
         OkHttpClient client = new OkHttpClient.Builder().build();
         Request request = new Request.Builder().url(API_URL).build();
-
-        try {
-
-
-            if (5 > 1) {
-                Response response = client.newCall(request).execute();
-                weatherList = processor.processJSON(response.body().string());
-                Log.d("E_", "network ");
-            } else {
-                weatherList = dataCenter.getWeatherList();
-                Log.d("E_", "database ");
-            }
-
-
-        } catch (JSONException e) {
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//getting data
+        optimizer(client, request);
 
 
         return weatherList;
     }
 
+
     @Override
     protected void onPostExecute(ArrayList<Weather> weathers) {
         super.onPostExecute(weathers);
+        if (!dataManager.isSuccessful() && isOfflineMode) {
+
+            Toast.makeText(context, "you need to turn on Internet connection wile running " +
+                    "Thunder Buddy for the first time", Toast.LENGTH_LONG).show();
+        }
         finishedListener.onTaskFinished();
     }
 
-
-    public boolean networkDisabled() {
-        final String GOOGLE_WEB_SITE = "https://www.google.co.eg/";
-        int responseCode = -1;
-        boolean disabled = false;
-        URLConnection connection = null;
+    /**
+     * trying to access internet for data and in case of failure it's activate the database backup
+     *
+     * @param client
+     * @param request
+     */
+    private void optimizer(OkHttpClient client, Request request) {
         try {
-            URL url = new URL(GOOGLE_WEB_SITE);
-            connection = url.openConnection();
+
+            Response response = client.newCall(request).execute();
+            weatherList = processingManager.processJSON(response.body().string());
+            Log.d("E_", "network ");
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
         } catch (IOException e) {
             e.printStackTrace();
+            isOfflineMode = true;
+            weatherList = dataManager.getWeatherList();
+            Log.d("E_", "database ");
         }
-        connection.setConnectTimeout(3000);
-        HttpURLConnection httpConnection = (HttpURLConnection) connection;
-
-        try {
-            responseCode = httpConnection.getResponseCode();
-        } catch (Exception e1) {
-            disabled = true;
-        }
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-        } else {
-            disabled = false;
-        }
-        return disabled;
     }
+
+
 }

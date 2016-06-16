@@ -1,4 +1,4 @@
-package com.ahmedfahmi.challenge;
+package com.ahmedfahmi.challenge.ui;
 
 
 import android.support.v7.app.AppCompatActivity;
@@ -8,9 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 
-import com.ahmedfahmi.challenge.Assets.DividerItemDecoration;
-import com.ahmedfahmi.challenge.Assets.LoadingTask;
-import com.ahmedfahmi.challenge.Assets.Weather;
+import com.ahmedfahmi.challenge.extra.DividerItemDecoration;
+import com.ahmedfahmi.challenge.managers.DataManager;
+import com.ahmedfahmi.challenge.managers.LoadingTask;
+import com.ahmedfahmi.challenge.model.Weather;
+import com.ahmedfahmi.challenge.R;
 import com.ahmedfahmi.challenge.adapter.WeatherAdapter;
 
 
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private LoadingTask loadingTask;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+
 
 
     @Override
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         weatherList = loadingTask.getWeatherList();
+
     }
 
 

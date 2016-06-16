@@ -1,4 +1,4 @@
-package com.ahmedfahmi.challenge.Assets;
+package com.ahmedfahmi.challenge.model;
 
 /**
  * Created by Ahmed Fahmi on 6/14/2016.
