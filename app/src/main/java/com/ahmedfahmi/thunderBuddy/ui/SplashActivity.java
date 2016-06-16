@@ -1,16 +1,16 @@
-package com.ahmedfahmi.challenge.ui;
+package com.ahmedfahmi.thunderBuddy.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.ahmedfahmi.challenge.managers.DataManager;
-import com.ahmedfahmi.challenge.managers.LoadingTask;
-import com.ahmedfahmi.challenge.model.Weather;
-import com.ahmedfahmi.challenge.R;
+import com.ahmedfahmi.thunderBuddy.R;
+import com.ahmedfahmi.thunderBuddy.managers.DataManager;
+import com.ahmedfahmi.thunderBuddy.managers.LoadingTask;
+import com.ahmedfahmi.thunderBuddy.model.Weather;
 
 import java.util.ArrayList;
 

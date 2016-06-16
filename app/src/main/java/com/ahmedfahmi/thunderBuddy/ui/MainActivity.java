@@ -1,20 +1,17 @@
-package com.ahmedfahmi.challenge.ui;
+package com.ahmedfahmi.thunderBuddy.ui;
 
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-
-import com.ahmedfahmi.challenge.extra.DividerItemDecoration;
-import com.ahmedfahmi.challenge.managers.DataManager;
-import com.ahmedfahmi.challenge.managers.LoadingTask;
-import com.ahmedfahmi.challenge.model.Weather;
-import com.ahmedfahmi.challenge.R;
-import com.ahmedfahmi.challenge.adapter.WeatherAdapter;
-
+import com.ahmedfahmi.thunderBuddy.R;
+import com.ahmedfahmi.thunderBuddy.adapter.WeatherAdapter;
+import com.ahmedfahmi.thunderBuddy.extra.DividerItemDecoration;
+import com.ahmedfahmi.thunderBuddy.managers.LoadingTask;
+import com.ahmedfahmi.thunderBuddy.model.Weather;
 
 import java.util.ArrayList;
 
@@ -33,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
 
         initiate();

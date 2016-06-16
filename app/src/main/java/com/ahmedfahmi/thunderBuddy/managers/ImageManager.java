@@ -1,23 +1,26 @@
-package com.ahmedfahmi.challenge.managers;
+package com.ahmedfahmi.thunderBuddy.managers;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
-import java.util.concurrent.ExecutionException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by Ahmed Fahmi on 6/16/2016.
  */
 public class ImageManager {
 
-    private ImageDownLoader imageDownLoader;
 
     public static ImageManager imageManager;
 
     private ImageManager() {
-        imageDownLoader = ImageDownLoader.instance();
+
     }
 
     public static ImageManager instance() {
@@ -43,16 +46,21 @@ public class ImageManager {
         return bitmap;
     }
 
-    public Bitmap getBitmap(String url){
-        Bitmap image = null;
+    public Bitmap downLoadBitmap(String link) {
+        Bitmap bitmap = null;
         try {
-           image = imageDownLoader.execute(url).get();
-        } catch (InterruptedException e) {
+            URL url = new URL(link);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+            InputStream inputStream = (InputStream) connection.getInputStream();
+            bitmap = BitmapFactory.decodeStream(inputStream);
+        } catch (MalformedURLException e) {
             e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return image;
+        return bitmap;
     }
+
 
 }

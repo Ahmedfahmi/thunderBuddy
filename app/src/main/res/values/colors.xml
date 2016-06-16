@@ -5,8 +5,9 @@
     <color name="colorAccent">#FF4081</color>
     <color name="black">#000</color>
     <color name="white">#fff</color>
-
-
+    <color name="lightBlue">#2962ff</color>
+    <color name="darkGreen">#004d40</color>
+    <color name="lightGreen">#E0F2F1</color>
 
 
 </resources>

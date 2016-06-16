@@ -1,4 +1,4 @@
-package com.ahmedfahmi.challenge;
+package com.ahmedfahmi.thunderBuddy;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

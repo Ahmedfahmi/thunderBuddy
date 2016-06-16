@@ -1,16 +1,14 @@
-package com.ahmedfahmi.challenge.managers;
+package com.ahmedfahmi.thunderBuddy.managers;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
-import com.ahmedfahmi.challenge.model.Weather;
+import com.ahmedfahmi.thunderBuddy.model.Weather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Ahmed Fahmi on 6/15/2016.
@@ -18,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 public class ProcessingManager {
     public static ProcessingManager processingManager;
     private final String TEMPERATURE_HIGH = "high";
+    private final String TEMPERATURE_LOW = "low";
     private final String TEMPERATURE_CELSIUS = "celsius";
     private final String FORECAST_DATE = "date";
     private final String FORECAST_DAY = "day";
@@ -28,17 +27,17 @@ public class ProcessingManager {
     private final String FORECASTDAY = "forecastday";
     private final String CONDITIONS = "conditions";
     private final String ICON_URL = "icon_url";
-    private final String DEGREE = "\u00b0";
+    private final String DEGREE = "\u00b0C";
     private ArrayList<Weather> weatherList;
     private DataManager dataManager;
     private ImageManager imageManager;
-    private ImageDownLoader imageDownLoader;
+
 
     private ProcessingManager() {
         weatherList = new ArrayList<>();
         dataManager = DataManager.instance();
         imageManager = ImageManager.instance();
-        imageDownLoader = ImageDownLoader.instance();
+
     }
 
     public static ProcessingManager instance() {
@@ -56,7 +55,8 @@ public class ProcessingManager {
      * @throws JSONException
      */
     protected ArrayList<Weather> processJSON(String String) throws JSONException {
-        String temperatureInCelsius;
+        String hightTemperatureInCelsius;
+        String lowTemperatureInCelsius;
         dataManager.cleanDataCenter();
 
         JSONObject weatherObject = new JSONObject(String);
@@ -69,35 +69,36 @@ public class ProcessingManager {
 
         for (int i = 0; i < 4; i++) {
             JSONObject forecastDayItem = forecastDayArray.getJSONObject(i);
-
+            //highTemperature
             JSONObject highTemperatureObject = forecastDayItem.getJSONObject(TEMPERATURE_HIGH);
+            JSONObject lowTemperatureObject = forecastDayItem.getJSONObject(TEMPERATURE_LOW);
+            hightTemperatureInCelsius = highTemperatureObject.getString(TEMPERATURE_CELSIUS) + DEGREE;
+            lowTemperatureInCelsius = lowTemperatureObject.getString(TEMPERATURE_CELSIUS) + DEGREE;
 
-//add
-
-
+            //weather condition
             String condition = forecastDayItem.getString(CONDITIONS);
+
+            //icon image
             String iconUrl = forecastDayItem.getString(ICON_URL);
+            Bitmap iconBitmap = imageManager.downLoadBitmap(iconUrl);
 
 
-            temperatureInCelsius = highTemperatureObject.getString(TEMPERATURE_CELSIUS) + DEGREE;
-
+            //date
             JSONObject dateObject = forecastDayItem.getJSONObject(FORECAST_DATE);
-
             String weekdayShort = dateObject.getString(DATE_WEEKDAY_SHORT);
-
             String date = dateObject.getString(FORECAST_DAY);
-
             String month = dateObject.getString(FORECAST_MONTH);
 
             String fullDate = date + " " + month;
-            
+
 
             //getting real time data
-            weatherList.add(new Weather(weekdayShort, temperatureInCelsius, fullDate));
+            weatherList.add(new Weather(weekdayShort, hightTemperatureInCelsius, lowTemperatureInCelsius, fullDate, condition, iconBitmap));
 
 
             //update DataBase
-            dataManager.updateDataCenter(weekdayShort, temperatureInCelsius, fullDate);
+            String iconString = imageManager.convertBitmapToString(iconBitmap);
+            dataManager.updateDataCenter(weekdayShort, hightTemperatureInCelsius, lowTemperatureInCelsius, fullDate, condition, iconString);
 
 
         }

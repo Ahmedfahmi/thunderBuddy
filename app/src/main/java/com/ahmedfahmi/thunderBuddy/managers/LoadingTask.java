@@ -1,31 +1,17 @@
-package com.ahmedfahmi.challenge.managers;
+package com.ahmedfahmi.thunderBuddy.managers;
 
 
-import android.app.AlertDialog;
 import android.content.Context;
-
-import android.content.DialogInterface;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-
-import com.ahmedfahmi.challenge.model.Weather;
-import com.ahmedfahmi.challenge.ui.MainActivity;
+import com.ahmedfahmi.thunderBuddy.model.Weather;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,27 +22,32 @@ import okhttp3.Response;
  * Created by Ahmed Fahmi on 6/14/2016.
  */
 public class LoadingTask extends AsyncTask<String, Void, ArrayList<Weather>> {
-    private final String API_URL = "http://api.wunderground.com/api/838ed9367e8876bf%20/forecast/q/EG/Cairo.json";
 
-    private ProcessingManager processingManager;
-    private ArrayList<Weather> weatherList;
     private static LoadingTask loadingTask;
-    private Context context;
+    private final String API_URL = "http://api.wunderground.com/api/838ed9367e8876bf%20/forecast/q/EG/Cairo.json";
+    private final String TOAST_MESSAGE = "you need to turn on Internet connection wile running " +
+            "Thunder Buddy for the first time";
+    private ProcessingManager processingManager;
     private DataManager dataManager;
-    private boolean isOfflineMode = false;
+    private Context context;
+
+    private ArrayList<Weather> weatherList;
 
 
-    public interface LoadingTaskFinishedListener {
-        void onTaskFinished();
-    }
-
+    private boolean isOfflineMode;
     private LoadingTaskFinishedListener finishedListener = null;
 
-
-    public ArrayList<Weather> getWeatherList() {
-        return weatherList;
+    private LoadingTask(Context context, LoadingTaskFinishedListener loadingTaskFinishedListener) {
+        isOfflineMode = false;
+        processingManager = ProcessingManager.instance();
+        this.context = context;
+        this.finishedListener = loadingTaskFinishedListener;
     }
 
+
+    private LoadingTask() {
+
+    }
 
     public static LoadingTask instance(Context context, LoadingTaskFinishedListener loadingTaskFinishedListener) {
 
@@ -70,16 +61,9 @@ public class LoadingTask extends AsyncTask<String, Void, ArrayList<Weather>> {
         return loadingTask;
     }
 
-    private LoadingTask(Context context, LoadingTaskFinishedListener loadingTaskFinishedListener) {
-        processingManager = ProcessingManager.instance();
-        this.context = context;
-        this.finishedListener = loadingTaskFinishedListener;
+    public ArrayList<Weather> getWeatherList() {
+        return weatherList;
     }
-
-    private LoadingTask() {
-
-    }
-
 
     @Override
     protected ArrayList<Weather> doInBackground(String... urls) {
@@ -97,14 +81,12 @@ public class LoadingTask extends AsyncTask<String, Void, ArrayList<Weather>> {
         return weatherList;
     }
 
-
     @Override
     protected void onPostExecute(ArrayList<Weather> weathers) {
         super.onPostExecute(weathers);
         if (!dataManager.isSuccessful() && isOfflineMode) {
 
-            Toast.makeText(context, "you need to turn on Internet connection wile running " +
-                    "Thunder Buddy for the first time", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, TOAST_MESSAGE, Toast.LENGTH_LONG).show();
         }
         finishedListener.onTaskFinished();
     }
@@ -132,6 +114,10 @@ public class LoadingTask extends AsyncTask<String, Void, ArrayList<Weather>> {
             weatherList = dataManager.getWeatherList();
             Log.d("E_", "database ");
         }
+    }
+
+    public interface LoadingTaskFinishedListener {
+        void onTaskFinished();
     }
 
 
