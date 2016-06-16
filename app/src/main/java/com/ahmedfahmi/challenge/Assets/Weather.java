@@ -9,8 +9,8 @@ public class Weather {
     private String date;
     private String temperature;
 
-    public Weather(String day, String temperature, String date) {
-        this.day = day;
+    public Weather(String weekday, String temperature, String date) {
+        this.day = weekday;
         this.temperature = temperature;
         this.date = date;
     }
@@ -19,23 +19,15 @@ public class Weather {
         return day;
     }
 
-    public void setDay(String day) {
-        this.day = day;
-    }
 
     public String getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
 
     public String getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(String temperature) {
-        this.temperature = temperature;
-    }
+
 }

@@ -1,20 +1,22 @@
 package com.ahmedfahmi.challenge.Assets;
 
+
+import android.content.Context;
+
 import android.os.AsyncTask;
 import android.util.Log;
 
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
+
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
-import okhttp3.Callback;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -23,103 +25,114 @@ import okhttp3.Response;
 /**
  * Created by Ahmed Fahmi on 6/14/2016.
  */
-public class LoadingTask extends AsyncTask<String, Void, String> {
+public class LoadingTask extends AsyncTask<String, Void, ArrayList<Weather>> {
+    private final String API_URL = "http://api.wunderground.com/api/838ed9367e8876bf%20/forecast/q/EG/Cairo.json";
 
-    String result = "";
-    ArrayList<String> dayData = new ArrayList<>();
-    ArrayList<String> tempData = new ArrayList<>();
-    ArrayList<String> dateData = new ArrayList<>();
-    ArrayList<Weather> weatherData = new ArrayList<>();
+    private Processor processor;
+    private ArrayList<Weather> weatherList;
+    private static LoadingTask loadingTask;
+    private Context context;
+    private DataCenter dataCenter;
 
-    public ArrayList<Weather> getWeatherData() {
-        return weatherData;
+    public interface LoadingTaskFinishedListener {
+        void onTaskFinished();
     }
 
-    @Override
-    protected String doInBackground(String... urls) {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(urls[0])
+    private LoadingTaskFinishedListener finishedListener = null;
 
-                .build();
+
+    public ArrayList<Weather> getWeatherList() {
+        return weatherList;
+    }
+
+
+    public static LoadingTask instance(Context context, LoadingTaskFinishedListener loadingTaskFinishedListener) {
+
+        if (loadingTask == null) {
+            loadingTask = new LoadingTask(context, loadingTaskFinishedListener);
+        }
+        return loadingTask;
+    }
+
+    public static LoadingTask instance() {
+        return loadingTask;
+    }
+
+    private LoadingTask(Context context, LoadingTaskFinishedListener loadingTaskFinishedListener) {
+        processor = Processor.instance();
+        this.context = context;
+        this.finishedListener = loadingTaskFinishedListener;
+    }
+
+    private LoadingTask() {
+
+    }
+
+
+
+
+    @Override
+    protected ArrayList<Weather> doInBackground(String... urls) {
+
+        weatherList = new ArrayList<>();
+        dataCenter = DataCenter.instance();
+
+        OkHttpClient client = new OkHttpClient.Builder().build();
+        Request request = new Request.Builder().url(API_URL).build();
 
         try {
-            Response response = client.newCall(request).execute();
-           result= response.body().string();
+
+
+            if (5 > 1) {
+                Response response = client.newCall(request).execute();
+                weatherList = processor.processJSON(response.body().string());
+                Log.d("E_", "network ");
+            } else {
+                weatherList = dataCenter.getWeatherList();
+                Log.d("E_", "database ");
+            }
+
+
+        } catch (JSONException e) {
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
 
-        return result;
-    }
-
-    public ArrayList<String> getDayData() {
-        return dayData;
-    }
-
-    public ArrayList<String> getTempData() {
-        return tempData;
-    }
-
-    public ArrayList<String> getDateData() {
-        return dateData;
+        return weatherList;
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-
-        String celsius="";
-
-        try {
-            JSONObject jsonWeather = new JSONObject(s);
-            JSONObject weatherForecast = jsonWeather
-                    .getJSONObject("forecast");
-            JSONObject simpleForecast = weatherForecast
-                    .getJSONObject("simpleforecast");
-            JSONArray forecastArray = simpleForecast
-                    .getJSONArray("forecastday");
-            for (int i = 0; i <4; i++) {
-                JSONObject fa = forecastArray.getJSONObject(i);
-                JSONObject highArray = fa.getJSONObject("high");
-                for (int h = 0; h < 3; h++) {
-                    celsius = highArray.getString("celsius");
-                    Log.i("E_", celsius);
-                    tempData.add(celsius);
-
-
-                }
-                JSONObject dateArray = fa.getJSONObject("date");
-                for (int h = 0; h < 1; h++) {
-                    String weekday = dateArray.getString("weekday");
-                    String day = dateArray.getString("day");
-                    String month = dateArray.getString("month");
-                    String year = dateArray.getString("year");
-                    Log.i("E_", weekday);
-                    Log.i("E_", day);
-                    Log.i("E_", month);
-                    Log.i("E_", year);
-                    String fullDate = day +" "+ year +" "+ month;
-                    dateData.add(fullDate);
-                    dayData.add(weekday);
-                    weatherData.add(new Weather(weekday,celsius,fullDate));
-
-
-                }
-
-
-            }
-
-
-        } catch (JSONException e) {
-            Log.i("E_", "Failed");
-            e.printStackTrace();
-        }
-
-
-
+    protected void onPostExecute(ArrayList<Weather> weathers) {
+        super.onPostExecute(weathers);
+        finishedListener.onTaskFinished();
     }
 
+
+    public boolean networkDisabled() {
+        final String GOOGLE_WEB_SITE = "https://www.google.co.eg/";
+        int responseCode = -1;
+        boolean disabled = false;
+        URLConnection connection = null;
+        try {
+            URL url = new URL(GOOGLE_WEB_SITE);
+            connection = url.openConnection();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        connection.setConnectTimeout(3000);
+        HttpURLConnection httpConnection = (HttpURLConnection) connection;
+
+        try {
+            responseCode = httpConnection.getResponseCode();
+        } catch (Exception e1) {
+            disabled = true;
+        }
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+        } else {
+            disabled = false;
+        }
+        return disabled;
+    }
 }
