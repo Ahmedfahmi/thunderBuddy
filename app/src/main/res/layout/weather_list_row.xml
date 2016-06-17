@@ -24,6 +24,7 @@
         android:id="@+id/highTemperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/section_label"
         android:text="25'C"
@@ -48,38 +49,38 @@
         android:id="@+id/weekday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/condition"
+        android:layout_alignBottom="@+id/condition"
+        android:layout_alignParentEnd="true"
         android:text="Mon"
         android:textColor="@color/lightBlue"
         android:textSize="20sp"
-        android:textStyle="bold|italic"
-        android:layout_alignBaseline="@+id/condition"
-        android:layout_alignBottom="@+id/condition"
-        android:layout_alignParentEnd="true" />
+        android:textStyle="bold|italic" />
 
     <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/weekday"
+        android:layout_alignParentEnd="true"
         android:text="20 may"
         android:textColor="@color/lightBlue"
         android:textSize="20sp"
-        android:textStyle="italic"
-        android:layout_above="@+id/weekday"
-        android:layout_alignParentEnd="true" />
+        android:textStyle="italic" />
 
     <TextView
         android:id="@+id/condition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:text="sika"
+        android:layout_alignBottom="@+id/lowTemperature"
 
+        android:layout_alignStart="@+id/weatherIcon"
+        android:layout_marginBottom="12dp"
+        android:layout_marginStart="17dp"
+        android:text="sika"
         android:textColor="@color/lightBlue"
         android:textSize="20sp"
-        android:textStyle="italic"
-        android:layout_alignStart="@id/weatherIcon"
-        android:layout_alignBaseline="@+id/highTemperature"
-        android:layout_alignBottom="@+id/highTemperature"
-        android:layout_centerHorizontal="true" />
+        android:textStyle="italic" />
 
 </RelativeLayout>
