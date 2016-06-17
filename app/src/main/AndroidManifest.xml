@@ -12,10 +12,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.ahmedfahmi.thunderBuddy.ui.MainActivity">
+        <activity android:name="com.ahmedfahmi.thunderBuddy.refactorToActivities.MainActivity">
 
         </activity>
-        <activity android:name="com.ahmedfahmi.thunderBuddy.ui.SplashActivity">
+        <activity android:name="com.ahmedfahmi.thunderBuddy.refactorToActivities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

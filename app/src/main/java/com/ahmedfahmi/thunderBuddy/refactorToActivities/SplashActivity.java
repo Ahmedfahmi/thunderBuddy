@@ -1,4 +1,4 @@
-package com.ahmedfahmi.thunderBuddy.ui;
+package com.ahmedfahmi.thunderBuddy.refactorToActivities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,10 +25,7 @@ public class SplashActivity extends AppCompatActivity implements LoadingTask.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
-
         initiate();
-
-
         loading();
     }
 
@@ -46,7 +43,6 @@ public class SplashActivity extends AppCompatActivity implements LoadingTask.Loa
      loading data either from internet connection or  database
      */
     private void loading() {
-
         loadingTask.execute();
     }
 
@@ -72,12 +68,10 @@ public class SplashActivity extends AppCompatActivity implements LoadingTask.Loa
         handler.post(runnable);
     }
 
-
     @Override
     public void onTaskFinished() {
         splashScreenIsActive = false;
         moveToForecastActivity();
-
     }
 
     private void moveToForecastActivity() {

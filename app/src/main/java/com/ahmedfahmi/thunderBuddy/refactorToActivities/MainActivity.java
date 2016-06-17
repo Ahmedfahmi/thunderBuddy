@@ -1,5 +1,4 @@
-package com.ahmedfahmi.thunderBuddy.ui;
-
+package com.ahmedfahmi.thunderBuddy.refactorToActivities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,9 +14,7 @@ import com.ahmedfahmi.thunderBuddy.model.Weather;
 
 import java.util.ArrayList;
 
-
 public class MainActivity extends AppCompatActivity {
-
 
     private ArrayList<Weather> weatherList;
     private WeatherAdapter weatherAdapter;
@@ -25,23 +22,14 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-
-
         initiate();
-
-
         weatherAdapter = new WeatherAdapter(weatherList);
         recyclerView.setAdapter(weatherAdapter);
-
-
     }
-
 
     private void initiate() {
 

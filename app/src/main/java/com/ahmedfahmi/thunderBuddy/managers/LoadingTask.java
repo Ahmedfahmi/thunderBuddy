@@ -25,7 +25,7 @@ public class LoadingTask extends AsyncTask<String, Void, ArrayList<Weather>> {
 
     private static LoadingTask loadingTask;
     private final String API_URL = "http://api.wunderground.com/api/838ed9367e8876bf%20/forecast/q/EG/Cairo.json";
-    private final String TOAST_MESSAGE = "you need to turn on Internet connection wile running " +
+    private final String TOAST_MESSAGE = "you need to turn on Internet connection while running " +
             "Thunder Buddy for the first time";
     private ProcessingManager processingManager;
     private DataManager dataManager;
