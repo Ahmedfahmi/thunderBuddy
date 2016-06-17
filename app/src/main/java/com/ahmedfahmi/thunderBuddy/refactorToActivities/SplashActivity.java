@@ -61,7 +61,7 @@ public class SplashActivity extends AppCompatActivity implements LoadingTask.Loa
                 if (splashScreenIsActive) {
                     splashIcon.setTranslationX(middle);
                     splashIcon.animate().translationXBy(1000f).setDuration(2000);
-                    handler.postDelayed(this, 1500);//run after 2 second
+                    handler.postDelayed(this, 1500);//run after 1.5 second
                 }
             }
         };
