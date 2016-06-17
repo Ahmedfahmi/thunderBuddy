@@ -12,14 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <ImageView
-        android:id="@+id/weatherIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/date"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/sun" />
-
     <TextView
         android:id="@+id/highTemperature"
         android:layout_width="wrap_content"
@@ -44,41 +36,49 @@
         android:textStyle="italic" />
 
     <TextView
+        android:id="@+id/condition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/weatherIcon"
+
+        android:layout_centerHorizontal="true"
+        android:text="sika"
+        android:textColor="@color/lightBlue"
+        android:textSize="30sp"
+        android:textStyle="italic" />
+
+    <ImageView
+        android:id="@+id/weatherIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/sun" />
+
+    <TextView
 
         android:id="@+id/weekday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/section_label"
+        android:layout_marginEnd="25dp"
         android:text="Mon"
+
         android:textColor="@color/lightBlue"
         android:textSize="60sp"
-        android:textStyle="bold|italic"
-        android:layout_alignTop="@+id/condition"
-        android:layout_alignEnd="@+id/date" />
+        android:textStyle="bold|italic" />
 
     <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/weekday"
+        android:layout_below="@+id/weekday"
         android:text="20 may"
         android:textColor="@color/lightBlue"
         android:textSize="60sp"
-        android:textStyle="italic"
-        android:layout_above="@+id/weekday"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:id="@+id/condition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:text="sika"
-
-        android:textColor="@color/lightBlue"
-        android:textSize="60sp"
-        android:textStyle="italic"
-        android:layout_alignStart="@id/weatherIcon"
-        android:layout_alignBaseline="@+id/highTemperature"
-        android:layout_alignBottom="@+id/highTemperature"
-        android:layout_centerHorizontal="true" />
+        android:textStyle="italic" />
 
 </RelativeLayout>
